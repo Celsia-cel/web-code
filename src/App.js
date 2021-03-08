@@ -19,6 +19,7 @@ function App() {
             </li>
             <li>
                <Link to="/about">About Us</Link>
+               <Link to="/home">Home</Link>
             </li>
             <li>
                <Link to="/contact">Contact Us</Link>
