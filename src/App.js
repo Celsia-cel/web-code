@@ -6,11 +6,6 @@ import Home from './components/home';
 import Contact from './components/contact';
 import About from './components/about';
 
-
-
-
-
-
 function App() {
   return (
     <div className="App">
