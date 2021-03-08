@@ -8,7 +8,8 @@ import About from './components/about';
 
 function App() {
   return (
-    <div className="App">
+
+<div className="App">
      <Form />
      < BrowserRouter >
       <div>
