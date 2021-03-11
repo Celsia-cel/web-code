@@ -1,7 +1,9 @@
 
 import { makeStyles, TextField, Button, Grid } from '@material-ui/core';
 import React, { useState } from 'react';
-import {withRouter} from 'react-router'
+import dashboard from '../components/dashboard';
+import { withRouter } from 'react-router'
+var axios = require('axios');
 
 const useStyles = makeStyles((theme) => ({
 
@@ -46,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
+
 function Login(props) {
     const classes = useStyles();
     const [username, setUsername] = useState("")
@@ -65,7 +68,7 @@ function Login(props) {
             setcheckEmail(false)
         } else {
             setValidFlag(false)
-            if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(username)) {
+            if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9-]+)+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(username)) {
                 setcheckEmail(false)
             }
             else {
@@ -78,31 +81,56 @@ function Login(props) {
             setcheckPassword(false)
         } else {
             setValidpasswordFlag(false)
-            if(password.charAt(0)== password.charAt(0).toUpperCase()){
+            if (password.charAt(0) == password.charAt(0).toUpperCase()) {
                 setcheckPassword(false)
-                if(/^[a-zA-Z0-9.@!#$%&'*+/=?^_`{|}~-]+$/.test(password)){
+                if (/^[a-zA-Z0-9.@!#$%&'*+/=?^_`{|}~-]+$/.test(password)) {
                     debugger;
                     setchecknum(false)
-                    if(password.length>=6 && password.length<=12){
+                    if (password.length >= 6 && password.length <= 12) {
                         setmax(false);
                     }
-                    else{
+                    else {
                         setmax(true)
                     }
                 }
-                else{
+                else {
                     debugger;
                     setcheckPassword(false)
                     setchecknum(true)
                 }
             }
-            else{
+            else {
                 setcheckPassword(true)
             }
         }
 
-        if(checkPassword == false || validFlag == false || validpasswordFlag == false || checkEmail == false || checknum ==false || max == false ) {
-            window.location.assign('/dashboard')
+
+        if (checkPassword == false && validFlag == false && validpasswordFlag == false && checkEmail == false && checknum == false && max == false) {
+            var data = JSON.stringify({ "EmailID": username, "Password": password });
+            var config = {
+                method: 'post',
+                url: 'https://dfd.zoifintech.com/Login',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+            axios(config)
+                .then(function (response) {
+                    console.log(JSON.stringify(response.data));
+                    if(response.data.status == "S"){
+                        window.location.assign('/dashboard');
+                        props.history.push('/dashboard')
+                    }
+                    else{
+                        alert("Please Check Login");
+                    }
+                    
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            // window.location.assign('/dashboard')
         }
     }
 
@@ -113,6 +141,7 @@ function Login(props) {
         var password = e.target.value
         setPassword(password)
     }
+  
 
     return (
 
@@ -139,11 +168,11 @@ function Login(props) {
 
                 </form>
             </div>
-            
+
         </Grid>
-        
+
     );
-   
+
 
 }
 export default withRouter(Login);
